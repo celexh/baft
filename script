@@ -1,9 +1,3 @@
-task.spawn(function()
-    while true do
-        memory_write("byte", game.Players.LocalPlayer.Character.Humanoid.Address + 0x1DD, 1)
-        wait(600)
-    end
-end)
 
 print("Loading Tween")
 
