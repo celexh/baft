@@ -670,7 +670,7 @@ function UI:RenderTitleBar()
     self:CreateRect(0, 0, p.width, 50, Color3.fromRGB(25, 28, 35))
     self:CreateRect(0, 48, p.width, 2, Color3.fromRGB(16, 185, 129))
     
-    self:CreateText("Windy", 20, 15, Color3.fromRGB(255, 255, 255), 18)
+    self:CreateText("Windy - Test", 20, 15, Color3.fromRGB(255, 255, 255), 18)
     self:CreateText("Bee Swarm Simulator", 20, 32, Color3.fromRGB(150, 160, 175), 11)
     
     local statusX = p.width - 120
