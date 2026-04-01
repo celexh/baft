@@ -1,31 +1,40 @@
 local version = "Version 1.1.9 - Gravity Fix"
-
+print("uptodate")
 -- Clean up loader drawings that persist after load
 if _G.__LoaderDrawings then
     local loaderDrawings = _G.__LoaderDrawings
     _G.__LoaderDrawings = nil
-    -- Run cleanup loop for 3 seconds to keep forcing them invisible
+    
+    local function nukeDrawings()
+        for _, d in pairs(loaderDrawings) do
+            pcall(function() d.instance.Visible = false end)
+            pcall(function() d.instance.Transparency = 0 end)
+            pcall(function() d.instance.Color = Color3.fromRGB(0, 0, 0) end)
+            if d.dtype == "text" then
+                pcall(function() d.instance.Text = "" end)
+                pcall(function() d.instance.Size = 0 end)
+                pcall(function() d.instance.Position = Vector2.new(-9999, -9999) end)
+            elseif d.dtype == "line" then
+                pcall(function() d.instance.Thickness = 0 end)
+                pcall(function() d.instance.From = Vector2.new(-9999, -9999) end)
+                pcall(function() d.instance.To = Vector2.new(-9999, -9999) end)
+            elseif d.dtype == "rect" then
+                pcall(function() d.instance.Size = Vector2.new(0, 0) end)
+                pcall(function() d.instance.Position = Vector2.new(-9999, -9999) end)
+            end
+            pcall(function() d.instance:Remove() end)
+        end
+    end
+    
+    -- Immediate synchronous cleanup
+    nukeDrawings()
+    
+    -- Keep nuking for 3 seconds in case they respawn
     spawn(function()
         local startTime = os.clock()
         while os.clock() - startTime < 3 do
-            for _, d in pairs(loaderDrawings) do
-                pcall(function() d.instance.Visible = false end)
-                pcall(function() d.instance.Transparency = 0 end)
-                if d.dtype == "text" then
-                    pcall(function() d.instance.Text = "" end)
-                    pcall(function() d.instance.Size = 0 end)
-                    pcall(function() d.instance.Position = Vector2.new(-9999, -9999) end)
-                elseif d.dtype == "line" then
-                    pcall(function() d.instance.Thickness = 0 end)
-                    pcall(function() d.instance.From = Vector2.new(-9999, -9999) end)
-                    pcall(function() d.instance.To = Vector2.new(-9999, -9999) end)
-                elseif d.dtype == "rect" then
-                    pcall(function() d.instance.Size = Vector2.new(0, 0) end)
-                    pcall(function() d.instance.Position = Vector2.new(-9999, -9999) end)
-                end
-                pcall(function() d.instance:Remove() end)
-            end
-            task.wait(0.05)
+            nukeDrawings()
+            task.wait(0.03)
         end
     end)
 end
